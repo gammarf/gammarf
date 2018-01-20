@@ -56,7 +56,7 @@ class Tdoa(threading.Thread):
         self.connector = system_mods['connector']
         self.devmod = system_mods['devices']
         self.sysdevid = self.devmod.get_sysdevid(self.devid)
-        self.gain = self.devmod.get_gain(self.devid)
+        self.gain = self.devmod.get_rtlsdr_gain(self.devid)
         self.offset = self.devmod.get_rtlsdr_offset(self.devid)
         self.ppm = self.devmod.get_rtlsdr_ppm(self.devid)
 
@@ -130,7 +130,8 @@ class Tdoa(threading.Thread):
                 "-n {}".format(SAMPLES), outfile], stdout=PIPE,
                 close_fds=ON_POSIX)
 
-
+            # something's wrong - need to tell the server when to deltee from the dict maybe, or maybe the server should do it at 'go- shouldn't see two messages on requestor about the same node (nor shoudl there be multipel files in /tmp)
+            # stop (collect) the process
             # in the command make sure right dev, ppm etc. show up in the cmd string (ps)
             # save to file in /tmp w/ the uuid name
             # server has an sftp port (see gammarf.conf) that accepts only puts, clients put file w/ uuid before referencing, put-only server and uuid file names so secure (?)

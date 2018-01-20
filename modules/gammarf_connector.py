@@ -222,9 +222,10 @@ class ConnectorWorker(threading.Thread):
         try:
             self.datsock.send_string(json.dumps(data), zmq.NOBLOCK)
         except Exception as e:
-            self.connected = False
-            self.connect_message = "error sending to "\
-                    "data socket: {}".format(e)
+            pass
+            #self.connected = False
+            #self.connect_message = "error sending to "\
+            #        "data socket: {}".format(e)
 
     def sendcmd(self, data):
         with self.cmdlock:

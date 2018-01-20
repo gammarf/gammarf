@@ -263,12 +263,6 @@ class GrfModuleDevices(GrfModuleBase):
         dev = self.devs[devid]
         return dev.devtype
 
-    def get_gain(self, devid):
-        dev = self.devs[devid]
-        if dev.devtype == 'rtlsdr':
-            return dev.gain
-        return
-
     def get_hackrf_devnum(self):
         if not self.have_hackrf:
             return
@@ -318,6 +312,12 @@ class GrfModuleDevices(GrfModuleBase):
 
     def get_numdevs(self):
         return self.numdevs
+
+    def get_rtlsdr_gain(self, devid):
+        dev = self.devs[devid]
+        if dev.devtype == 'rtlsdr':
+            return dev.gain
+        return
 
     def get_rtlsdr_maxfreq(self, devid):
         dev = self.devs[devid]
