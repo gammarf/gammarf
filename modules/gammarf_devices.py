@@ -248,6 +248,8 @@ class GrfModuleDevices(GrfModuleBase):
         dev = self.devs[devid]
         if dev.devtype == 'virtual':
             self.devs.pop(devid, None)
+        elif dev.devtype == 'pseudo':
+            self.devs.pop(devid, None)
         else:
             dev.job = None
         return

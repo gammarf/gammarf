@@ -104,8 +104,6 @@ class GrfModuleBase():
         except AttributeError:
             pass
 
-        return
-
     @abc.abstractmethod
     def stop(self, devid, devmod):
         if self.worker:

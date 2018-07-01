@@ -39,7 +39,6 @@ def start(config):
 class P25Log(threading.Thread):
     def __init__(self, port, system_mods, settings):
         threading.Thread.__init__(self)
-        self.stoprequest = threading.Event()
 
         self.connector = system_mods['connector']
         self.settings = settings
@@ -54,13 +53,15 @@ class P25Log(threading.Thread):
 
         try:
             self.lstsock.bind( ('', self.port) )
+            #self.lstsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         except Exception as e:
             gammarf_util.console_message("could not listen on port {}: {}"
                     .format(self.port, e), MOD_NAME)
             return
 
-        while not self.stoprequest.isSet():
-            for line in self.lstsock.makefile():
+        self.f = self.lstsock.makefile()
+        try:
+            for line in self.f:
                 if '\t' in line:
                     tmp = line.split('\t')
                 else:
@@ -85,11 +86,14 @@ class P25Log(threading.Thread):
                     self.connector.senddat(data)
                 except:
                     pass
+        except ValueError:
+            pass  # while stopping module
 
         return
 
     def join(self, timeout=None):
-        self.stoprequest.set()
+        self.f.close()
+        self.lstsock.close()
         super(P25Log, self).join(timeout)
 
 
