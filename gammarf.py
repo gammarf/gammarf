@@ -353,8 +353,9 @@ def cmd_interesting(grfstate, args):
         gammarf_util.console_message("error getting interesting freqs")
 
 def cmd_interesting_add_usage():
-    gammarf_util.console_message("usage: > interesting_add freq freqname; "\
-            "freq is integer or int rtl_power format, name is a word")
+    gammarf_util.console_message("usage: > interesting_add freq freqname freqgroup; "\
+            "freq is integer or in rtl_power format, "\
+            "name and group are strings to help you organize your freqs")
 
 def cmd_interesting_add(grfstate, args):
     """Add an interesting frequency to this node's set"""
@@ -376,7 +377,7 @@ def cmd_interesting_add(grfstate, args):
         cmd_interesting_add_usage()
         return
 
-    if system_mods['connector'].interesting_add(freq, name):
+    if system_mods['connector'].interesting_add(freq, name, group):
         gammarf_util.console_message("interesting freqs updated")
     else:
         gammarf_util.console_message("error updating interesting freqs")
