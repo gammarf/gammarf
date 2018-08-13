@@ -37,7 +37,7 @@ CMD_ATTEMPT_FAIL_SLEEP = 2
 HEARTBEAT_INT = 10
 LOOP_SLEEP = 0.5
 MOD_NAME = "connector"
-QUEUE_MAX = int(10e3)  # don't change
+QUEUE_MAX = int(50)  # leave this alone
 RECONNECT_ATTEMPT_WAIT = 5  # s
 REQ_HEARTBEAT = 0
 REQ_INTERESTING_ADD = 11
@@ -368,8 +368,8 @@ class GrfModuleConnector(GrfModuleBase):
 
         gammarf_util.console_message("loaded", MOD_NAME)
 
-    def interesting_add(self, freq, name):
-        req = {'request': REQ_INTERESTING_ADD, 'name': name, 'freq': freq}
+    def interesting_add(self, freq, name, group):
+        req = {'request': REQ_INTERESTING_ADD, 'name': name, 'freq': freq, 'group': group}
         resp = self.sendcmd(req)
         if resp['reply'] == 'ok':
             return True
