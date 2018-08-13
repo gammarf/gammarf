@@ -367,7 +367,7 @@ def cmd_interesting_add(grfstate, args):
         return
 
     try:
-        freq, name = args.split()
+        freq, name, freqgroup = args.split()
     except ValueError:
         cmd_interesting_add_usage()
         return
@@ -377,7 +377,7 @@ def cmd_interesting_add(grfstate, args):
         cmd_interesting_add_usage()
         return
 
-    if system_mods['connector'].interesting_add(freq, name, group):
+    if system_mods['connector'].interesting_add(freq, name, freqgroup):
         gammarf_util.console_message("interesting freqs updated")
     else:
         gammarf_util.console_message("error updating interesting freqs")

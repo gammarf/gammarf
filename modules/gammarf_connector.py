@@ -386,8 +386,8 @@ class GrfModuleConnector(GrfModuleBase):
         if resp['reply'] == 'ok':
             interesting = resp['freqs'].split(None)
             out = []
-            for freq, name in zip(interesting[0::2], interesting[1::2]):
-                out.append( (int(freq), name) )
+            for freq, name, freqgroup in zip(interesting[0::3], interesting[1::3], interesting[2::3]):
+                out.append( (int(freq), name, freqgroup) )
             return sorted(out, key=lambda tup: tup[0])
 
     def interesting_pretty(self):
@@ -396,12 +396,12 @@ class GrfModuleConnector(GrfModuleBase):
         if resp['reply'] == 'ok':
             interesting = resp['freqs'].split(None)
             out = []
-            for freq, name in zip(interesting[0::2], interesting[1::2]):
-                out.append( (int(freq), name) )
+            for freq, name, freqgroup in zip(interesting[0::3], interesting[1::3], interesting[2::3]):
+                out.append( (int(freq), name, freqgroup) )
 
             out = sorted(out, key=lambda tup: tup[0])
-            for freq, name in out:
-                gammarf_util.console_message("{:11d} {}".format(freq, name))
+            for freq, name, freqgroup in out:
+                gammarf_util.console_message("{:11d} {} ({})".format(freq, name, freqgroup))
             return True
         return
 
