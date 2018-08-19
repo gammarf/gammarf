@@ -31,7 +31,7 @@ sys.path.insert(0, '3rdparty')
 import pylibhackrf
 
 # careful with these - spectrum will scan across this range
-HACKRF_DEFAULT_MAXSCAN = int(5000)  # MHz (reduce if you'd like, saves cpu)
+HACKRF_DEFAULT_MAXSCAN = int(2000)  # MHz (reduce if you'd like, saves cpu)
 HACKRF_DEFAULT_MINSCAN = int(50)  # don't change
 HACKRF_DEFAULT_STEP = 5000  # actual step may change
 
