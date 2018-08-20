@@ -22,6 +22,7 @@ import json
 import time
 import threading
 import urllib3
+urllib3.disable_warnings()
 import zmq
 import queue
 from hashlib import md5
