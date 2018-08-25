@@ -441,6 +441,8 @@ class GrfModuleDevices(GrfModuleBase):
         jobs = []
         for devtuple in self.devs.items():
             dev = devtuple[1]
+            if dev.reserved:
+                continue
             if dev.job:
                 jobs.append(dev.job)
 
