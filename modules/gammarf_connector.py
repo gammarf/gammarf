@@ -38,7 +38,7 @@ CMD_ATTEMPT_FAIL_SLEEP = 2
 HEARTBEAT_INT = 10
 LOOP_SLEEP = 0.5
 MOD_NAME = "connector"
-QUEUE_MAX = int(50)  # leave this alone
+QUEUE_MAX = int(100000)  # leave this alone
 RECONNECT_ATTEMPT_WAIT = 5  # s
 REQ_HEARTBEAT = 0
 REQ_INTERESTING_ADD = 11
@@ -126,7 +126,7 @@ class ConnectorWorker(threading.Thread):
                     connect_attempted = datetime.datetime.utcnow()
 
                     try:
-                        self.datsock = context.socket(zmq.PUSH)
+                        self.datsock = context.socket(zmq.DEALER)
                         self.datsock.setsockopt(zmq.LINGER, 0)
                         self.datsock.set_hwm(ZMQ_HWM)
                         self.datsock.connect("tcp://{}:{}"
