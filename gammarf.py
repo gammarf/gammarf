@@ -277,6 +277,7 @@ def cmdloop(grfstate):
     commands['help'] = cmd_help
     commands['interesting'] = cmd_interesting
     commands['interesting_add'] = cmd_interesting_add
+    commands['interesting_clone'] = cmd_interesting_clone
     commands['interesting_del'] = cmd_interesting_del
     commands['location'] = cmd_location
     commands['message'] = cmd_message
@@ -378,6 +379,27 @@ def cmd_interesting_add(grfstate, args):
         return
 
     if system_mods['connector'].interesting_add(freq, name, freqgroup):
+        gammarf_util.console_message("interesting freqs updated")
+    else:
+        gammarf_util.console_message("error updating interesting freqs")
+
+def cmd_interesting_clone_usage():
+    gammarf_util.console_message("usage: > interesting_clone source_stn; "\
+            "source_stn is the station you want to clone interesting "\
+            "freqs from")
+
+def cmd_interesting_clone(grfstate, args):
+    """Clone another station's interesting freqs"""
+
+    system_mods = grfstate.system_mods
+
+    if not args:
+        cmd_interesting_clone_usage()
+        return
+
+    source = args.split()[0]
+
+    if system_mods['connector'].interesting_clone(source):
         gammarf_util.console_message("interesting freqs updated")
     else:
         gammarf_util.console_message("error updating interesting freqs")

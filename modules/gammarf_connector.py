@@ -42,6 +42,7 @@ QUEUE_MAX = int(100000)  # leave this alone
 RECONNECT_ATTEMPT_WAIT = 5  # s
 REQ_HEARTBEAT = 0
 REQ_INTERESTING_ADD = 11
+REQ_INTERESTING_CLONE = 13
 REQ_INTERESTING_DEL = 12
 REQ_INTERESTING_GET = 1
 ZMQ_HWM = 0
@@ -371,6 +372,12 @@ class GrfModuleConnector(GrfModuleBase):
 
     def interesting_add(self, freq, name, group):
         req = {'request': REQ_INTERESTING_ADD, 'name': name, 'freq': freq, 'group': group}
+        resp = self.sendcmd(req)
+        if resp['reply'] == 'ok':
+            return True
+
+    def interesting_clone(self, source):
+        req = {'request': REQ_INTERESTING_CLONE, 'source': source}
         resp = self.sendcmd(req)
         if resp['reply'] == 'ok':
             return True
