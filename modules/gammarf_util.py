@@ -21,6 +21,25 @@ import math
 from time import gmtime, strftime
 
 
+def console_message(message=None, module=None, showdt=True):
+    line = ""
+
+    if showdt:
+        line += "[{}] ".format(gmt_pretty())
+
+    if module:
+        line += "[{}] ".format(module)
+
+    if message:
+        line += "{}".format(message)
+    else:
+        line += ""
+
+    print(line)
+
+def gmt_pretty():
+    return strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
 def str_to_hz(strfreq):
     """Convert frequency in rtl_sdr format (103M) to Hz int (103000000)"""
 
@@ -40,22 +59,3 @@ def str_to_hz(strfreq):
         return None
 
     return outfreq
-
-def console_message(message=None, module=None, showdt=True):
-    line = ""
-
-    if showdt:
-        line += "[{}] ".format(gmt_pretty())
-
-    if module:
-        line += "[{}] ".format(module)
-
-    if message:
-        line += "{}".format(message)
-    else:
-        line += ""
-
-    print(line)
-
-def gmt_pretty():
-    return strftime("%Y-%m-%d %H:%M:%S", gmtime())

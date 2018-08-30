@@ -45,6 +45,9 @@ REQ_INTERESTING_ADD = 11
 REQ_INTERESTING_CLONE = 13
 REQ_INTERESTING_DEL = 12
 REQ_INTERESTING_GET = 1
+REQ_P25_ADD = 14
+REQ_P25_DEL = 15
+REQ_P25_GET = 16
 ZMQ_HWM = 0
 
 
@@ -230,7 +233,8 @@ class ConnectorWorker(threading.Thread):
 
         while not self.datq.empty():
             try:
-                self.datsock.send_string(json.dumps(self.datq.get()), zmq.NOBLOCK)
+                self.datsock.send_string(json.dumps(self.datq.get()),
+                        zmq.NOBLOCK)
             except Exception as e:
                 return
 
@@ -256,8 +260,8 @@ class ConnectorWorker(threading.Thread):
                 except Exception as e:
                     if i == CMD_ATTEMPTS - 1:
                         self.connected = False
-                        self.connect_message = "error sending to command socket: "\
-                                "{}".format(e)
+                        self.connect_message = "error sending to command "\
+                                "socket: {}".format(e)
 
                         return {'reply': 'error', 'error': 'txerror'}
 
@@ -371,7 +375,8 @@ class GrfModuleConnector(GrfModuleBase):
         gammarf_util.console_message("loaded", MOD_NAME)
 
     def interesting_add(self, freq, name, group):
-        req = {'request': REQ_INTERESTING_ADD, 'name': name, 'freq': freq, 'group': group}
+        req = {'request': REQ_INTERESTING_ADD, 'name': name,
+                'freq': freq, 'group': group}
         resp = self.sendcmd(req)
         if resp['reply'] == 'ok':
             return True
@@ -394,7 +399,8 @@ class GrfModuleConnector(GrfModuleBase):
         if resp['reply'] == 'ok':
             interesting = resp['freqs'].split(None)
             out = []
-            for freq, name, freqgroup in zip(interesting[0::3], interesting[1::3], interesting[2::3]):
+            for freq, name, freqgroup in zip(interesting[0::3],
+                    interesting[1::3], interesting[2::3]):
                 out.append( (int(freq), name, freqgroup) )
             return sorted(out, key=lambda tup: tup[0])
 
@@ -404,12 +410,48 @@ class GrfModuleConnector(GrfModuleBase):
         if resp['reply'] == 'ok':
             interesting = resp['freqs'].split(None)
             out = []
-            for freq, name, freqgroup in zip(interesting[0::3], interesting[1::3], interesting[2::3]):
+            for freq, name, freqgroup in zip(interesting[0::3],
+                    interesting[1::3], interesting[2::3]):
                 out.append( (int(freq), name, freqgroup) )
 
             out = sorted(out, key=lambda tup: tup[0])
             for freq, name, freqgroup in out:
-                gammarf_util.console_message("{:11d} {} ({})".format(freq, name, freqgroup))
+                gammarf_util.console_message("{:11d} {} ({})".format(freq,
+                    name, freqgroup))
+            return True
+        return
+
+    def p25_add(self, talkgroup, tag, description):
+        req = {'request': REQ_P25_ADD, 'talkgroup': talkgroup,
+                'tag': tag, 'desc': description}
+        resp = self.sendcmd(req)
+        if resp['reply'] == 'ok':
+            return True
+
+    def p25_del(self, talkgroup):
+        req = {'request': REQ_P25_DEL, 'talkgroup': talkgroup}
+        resp = self.sendcmd(req)
+        if resp['reply'] == 'ok':
+            return True
+
+    def p25_pretty(self):
+        req = {'request': REQ_P25_GET}
+        resp = self.sendcmd(req)
+        if resp['reply'] == 'ok':
+            talkgroups = resp['talkgroups'].split('||')
+            out = []
+
+            for tmp in talkgroups:
+                try:
+                    talkgroup, tag, description = tmp.split(' ', 2)
+                except ValueError:
+                    continue
+                out.append( (int(talkgroup), tag, description) )
+
+            out = sorted(out, key=lambda tup: tup[0])
+            for talkgroup, tag, description in out:
+                gammarf_util.console_message("{:7d} {} ({})".format(talkgroup,
+                    tag, description))
             return True
         return
 
