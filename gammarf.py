@@ -283,6 +283,9 @@ def cmdloop(grfstate):
     commands['message'] = cmd_message
     commands['mods'] = cmd_mods
     commands['now'] = cmd_now
+    commands['p25'] = cmd_p25
+    commands['p25_add'] = cmd_p25_add
+    commands['p25_del'] = cmd_p25_del
     commands['pwr'] = cmd_pwr
     commands['quit'] = cmd_quit
     commands['run'] = cmd_run
@@ -352,6 +355,13 @@ def cmd_interesting(grfstate, args):
     system_mods = grfstate.system_mods
     if not system_mods['connector'].interesting_pretty():
         gammarf_util.console_message("error getting interesting freqs")
+
+def cmd_p25(grfstate, args):
+    """Show current p25 talkgroups for this node"""
+
+    system_mods = grfstate.system_mods
+    if not system_mods['connector'].p25_pretty():
+        gammarf_util.console_message("error getting p25 talkgroups")
 
 def cmd_interesting_add_usage():
     gammarf_util.console_message("usage: > interesting_add freq freqname freqgroup; "\
@@ -480,6 +490,70 @@ def cmd_now(grfstate, args):
     """Show the current time (UTC)"""
 
     gammarf_util.console_message(datetime.datetime.now())
+
+def cmd_p25_add_usage():
+    gammarf_util.console_message("usage: > p25_add talkgroup tag description; "\
+            "talkgroup is the decimal P25 talkgroup, "\
+            "tag and description are for informational purposes")
+
+def cmd_p25_add(grfstate, args):
+    """Add a p25 talkgroup to this node's set"""
+
+    system_mods = grfstate.system_mods
+
+    if not args:
+        cmd_p25_add_usage()
+        return
+
+    if not args:
+        cmd_p25_add_usage()
+        return
+
+    if len(args) < 3:
+        cmd_p25_add_usage()
+        return
+
+    split_args = args.split(' ', 2)
+    if len(split_args) < 3:
+        cmd_p25_add_usage()
+        return
+
+    try:
+        talkgroup = int(split_args[0])
+    except ValueError:
+        cmd_p25_add_usage()
+        return
+
+    tag = split_args[1]
+    description = split_args[2]
+
+    if system_mods['connector'].p25_add(talkgroup, tag, description):
+        gammarf_util.console_message("talkgroups updated - restart the client")
+    else:
+        gammarf_util.console_message("error updating talkgroups")
+
+def cmd_p25_del_usage():
+    gammarf_util.console_message("usage: > p25_del talkgroup")
+
+def cmd_p25_del(grfstate, args):
+    """Delete a talkgroup from this node's set"""
+
+    system_mods = grfstate.system_mods
+
+    if not args:
+        cmd_p25_del_usage()
+        return
+
+    try:
+        talkgroup = int(args)
+    except ValueError:
+        cmd_p25_del_usage()
+        return
+
+    if system_mods['connector'].p25_del(talkgroup):
+        return True
+
+    return
 
 def cmd_pwr_usage():
     gammarf_util.console_message("usage: > pwr freq")
