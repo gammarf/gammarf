@@ -138,9 +138,6 @@ class SpectrumWorker(threading.Thread):
             return
 
         freqbin = self.freqbin(freq)
-        if not freqbin:
-            return
-
         return self.freqmap[freqbin]
 
     def join(self, timeout=None):
