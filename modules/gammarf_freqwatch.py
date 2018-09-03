@@ -29,7 +29,6 @@ LOOP_SLEEP = 5
 MOD_NAME = "freqwatch"
 MODULE_FREQWATCH = 6
 PROTOCOL_VERSION = 1
-SEND_SLEEP = 0.001
 
 
 def start(config):
@@ -119,8 +118,6 @@ class Freqwatch(threading.Thread):
                         self.connector.senddat(data)
                     except:
                         pass
-
-                SEND_SLEEP = 0.002
 
             time.sleep(LOOP_SLEEP)
 

@@ -53,15 +53,14 @@ class P25Log(threading.Thread):
 
         try:
             self.lstsock.bind( ('', self.port) )
-            #self.lstsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         except Exception as e:
             gammarf_util.console_message("could not listen on port {}: {}"
                     .format(self.port, e), MOD_NAME)
             return
 
-        self.f = self.lstsock.makefile()
+        self.lstsock_file = self.lstsock.makefile()
         try:
-            for line in self.f:
+            for line in self.lstsock_file:
                 if '\t' in line:
                     tmp = line.split('\t')
                 else:
@@ -92,7 +91,8 @@ class P25Log(threading.Thread):
         return
 
     def join(self, timeout=None):
-        self.f.close()
+        self.lstsock_file.flush()
+        self.lstsock_file.close()
         self.lstsock.close()
         super(P25Log, self).join(timeout)
 
