@@ -72,7 +72,10 @@ class Channels(threading.Thread):
 
                 if pwr > self.threshold:
                     if in_channel:
-                        current_channel_pwrs.append(pwr)
+                        try:
+                            current_channel_pwrs.append(pwr)
+                        except TypeError:  # possible when shutting down
+                            pass
                     else:
                         enter_freq = freq
                         current_channel_pwrs = [pwr]
@@ -94,7 +97,7 @@ class Channels(threading.Thread):
                             if p >= cutoff_pwr:
                                 filtered_pwrs.append(p)
 
-                        bandwidth = len(filtered_pwrs * self.width)
+                        bandwidth = int(len(filtered_pwrs * self.width))
 
                         if self.settings['print_all']:
                             gammarf_util.console_message("center: {}, "\
