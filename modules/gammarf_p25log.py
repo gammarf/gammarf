@@ -91,7 +91,6 @@ class P25Log(threading.Thread):
         return
 
     def join(self, timeout=None):
-        self.lstsock_file.flush()
         self.lstsock_file.close()
         self.lstsock.close()
         super(P25Log, self).join(timeout)
