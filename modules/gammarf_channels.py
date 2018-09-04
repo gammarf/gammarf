@@ -94,7 +94,7 @@ class Channels(threading.Thread):
                             if p >= cutoff_pwr:
                                 filtered_pwrs.append(p)
 
-                        bandwidth = len(filtered_pwrs * self.width)
+                        bandwidth = int(len(filtered_pwrs * self.width))
 
                         if self.settings['print_all']:
                             gammarf_util.console_message("center: {}, "\
