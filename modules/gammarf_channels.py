@@ -109,7 +109,7 @@ class Channels(threading.Thread):
 
                         data['center'] = center
                         data['bw'] = bandwidth
-                        data['pwr'] = center_pwr
+                        data['pwr'] = "{:.2f}".format(center_pwr)
                         try:
                             self.connector.senddat(data)
                         except:
