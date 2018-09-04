@@ -72,7 +72,10 @@ class Channels(threading.Thread):
 
                 if pwr > self.threshold:
                     if in_channel:
-                        current_channel_pwrs.append(pwr)
+                        try:
+                            current_channel_pwrs.append(pwr)
+                        except TypeError:  # possible when shutting down
+                            pass
                     else:
                         enter_freq = freq
                         current_channel_pwrs = [pwr]
